@@ -35,10 +35,10 @@ exports.handleRequest = async (name, res) => {
     let errorMessage;
     if (error.message.startsWith('Failure:')) {
       errorMessage = error.message.replace('Failure:', '').trim();
-      res.status(500).json({ error: errorMessage });
+      res.status(400).json({ Failure: errorMessage });
     } else if (error.message.startsWith('Rejection:')) {
       errorMessage = error.message.replace('Rejection:', '').trim();
-      res.status(400).json({ error: errorMessage });
+      res.status(400).json({ Rejection: errorMessage });
     } else {
       // For unexpected errors
       errorMessage = 'Internal server error';

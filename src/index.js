@@ -4,10 +4,7 @@ const express = require('express');
 const app = express();
 const rateLimit = require('express-rate-limit');
 const cors = require('cors');
-const { init } = require('express-oas-generator');
 const requestHandler = require('./requestHandler');
-
-init(app, {});
 
 // Request Limiting, max 5 requests per windowMs for each IP
 const limiter = rateLimit({
