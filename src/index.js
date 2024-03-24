@@ -23,8 +23,8 @@ app.use(cors());
 // Allow preflighted request
 app.options('*', cors());
 
-app.get('/:content', (req, res) => {
-  requestHandler.handleRequest(req.params.content, res);
+app.get('/:name', (req, res) => {
+  requestHandler.handleRequest(req.params.name, res);
 });
 
 const PORT = process.env.PORT || 3000;

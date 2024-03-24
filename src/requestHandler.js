@@ -1,8 +1,33 @@
 const { dcDNS } = require('dc-over-dns');
+const fs = require('fs');
+const path = require('path');
 
-exports.handleRequest = async (content, res) => {
+const validTLDs = new Set();
+const tldFilePath = path.join(__dirname, 'tlds-alpha-by-domain.txt');
+
+fs.readFileSync(tldFilePath, 'utf-8')
+  .split('\n')
+  .forEach((line) => {
+    const trimmedLine = line.trim();
+    if (trimmedLine && !trimmedLine.startsWith('#')) {
+      validTLDs.add(trimmedLine.toLowerCase());
+    }
+  });
+
+const isValidTLD = (name) => {
+  const parts = name.split('.');
+  if (parts.length < 2) return false;
+  const tld = parts[parts.length - 1].toLowerCase();
+  return validTLDs.has(tld);
+};
+
+exports.handleRequest = async (name, res) => {
+  if (!isValidTLD(name)) {
+    return res.status(400).json({ error: 'The provided domain contains an invalid TLD' });
+  }
+
   try {
-    const value = await dcDNS.jsonResolve(content);
+    const value = await dcDNS.jsonResolve(name);
     // Parse the JSON string to remove escape characters
     const parsedValue = JSON.parse(value);
     res.status(200).json(parsedValue);
